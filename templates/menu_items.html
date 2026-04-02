@@ -1,0 +1,31 @@
+<h1>Menu Items</h1>
+
+<a href="/menu-items/add">Add Menu Item</a>
+<br><br>
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>Item Name</th>
+    <th>Price</th>
+    <th>Description</th>
+    <th>Category</th>
+    <th>Actions</th>
+</tr>
+
+{% for item in menu_items %}
+<tr>
+    <td>{{ item[0] }}</td>
+    <td>{{ item[1] }}</td>
+    <td>{{ item[2] }}</td>
+    <td>{{ item[3] }}</td>
+    <td>{{ item[4] }}</td>
+    <td>
+    <a href="/menu-items/edit/{{ item[0] }}">Edit</a> |
+    <a href="/menu-items/delete/{{ item[0] }}" onclick="return confirm('Are you sure you want to delete this menu item?')">Delete</a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<a href="/">Back Home</a>
