@@ -1,0 +1,30 @@
+<h1>Customers Page</h1>
+
+<a href="/customers/add">Add Customer</a>
+<br><br>
+
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Phone</th>
+    <th>Actions</th>
+</tr>
+
+{% for c in customers %}
+<tr>
+    <td>{{ c[0] }}</td>
+    <td>{{ c[1] }}</td>
+    <td>{{ c[2] }}</td>
+    <td>{{ c[3] }}</td>
+    <td>
+    <a href="/customers/edit/{{ c[0] }}">Edit</a> |
+    <a href="/customers/delete/{{ c[0] }}" onclick="return confirm('Are you sure you want to delete this customer?')">Delete</a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<a href="/">Back Home</a>
