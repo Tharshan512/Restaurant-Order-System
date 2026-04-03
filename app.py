@@ -49,14 +49,14 @@ def order_details():
         SELECT 
             o.OrderID,
             CONCAT(c.FirstName, ' ', c.LastName) AS Customer,
-            m.ItemName,
-            oi.Quantity,
-            m.Price,
-            (oi.Quantity * m.Price) AS Subtotal
+            GROUP_CONCAT(m.ItemName SEPARATOR ', ') AS Items,
+            SUM(oi.Quantity) AS TotalQuantity,
+        SUM(oi.Quantity * m.Price) AS TotalAmount
         FROM Orders o
         JOIN Customer c ON o.CustomerID = c.CustomerID
         JOIN OrderItem oi ON o.OrderID = oi.OrderID
         JOIN MenuItem m ON oi.MenuItemID = m.MenuItemID
+        GROUP BY o.OrderID, Customer
     """)
     orders = cursor.fetchall()
 

@@ -10,20 +10,18 @@
         <tr>
             <th>Order ID</th>
             <th>Customer</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Subtotal</th>
+            <th>Items</th>
+            <th>Total Quantity</th>
+            <th>Total Amount</th>
         </tr>
 
         {% for order in orders %}
         <tr>
             <td>{{ order.OrderID }}</td>
             <td>{{ order.Customer }}</td>
-            <td>{{ order.ItemName }}</td>
-            <td>{{ order.Quantity }}</td>
-            <td>{{ order.Price }}</td>
-            <td>{{ order.Subtotal }}</td>
+            <td>{{ order.Items }}</td>
+            <td>{{ order.TotalQuantity }}</td>
+            <td>{{ order.TotalAmount }}</td>
         </tr>
         {% endfor %}
     </table>
