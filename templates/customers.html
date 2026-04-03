@@ -1,30 +1,51 @@
-<h1>Customers Page</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 
-<a href="/customers/add">Add Customer</a>
-<br><br>
+<div class="navbar">
+    <h2>Restaurant Order System</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/customers">Customers</a>
+        <a href="/categories">Categories</a>
+        <a href="/menu-items">Menu Items</a>
+        <a href="/orders">Orders</a>
+        <a href="/order-details">Order Details</a>
+    </div>
+</div>
 
-<table border="1">
-<tr>
-    <th>ID</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Phone</th>
-    <th>Actions</th>
-</tr>
+<div class="container">
+    <h1>Customers</h1>
 
-{% for c in customers %}
-<tr>
-    <td>{{ c[0] }}</td>
-    <td>{{ c[1] }}</td>
-    <td>{{ c[2] }}</td>
-    <td>{{ c[3] }}</td>
-    <td>
-    <a href="/customers/edit/{{ c[0] }}">Edit</a> |
-    <a href="/customers/delete/{{ c[0] }}" onclick="return confirm('Are you sure you want to delete this customer?')">Delete</a>
-    </td>
-</tr>
-{% endfor %}
-</table>
+    <a href="/customers/add" class="btn">Add Customer</a>
 
-<br>
-<a href="/">Back Home</a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for c in customers %}
+        <tr>
+            <td>{{ c[0] }}</td>
+            <td>{{ c[1] }}</td>
+            <td>{{ c[2] }}</td>
+            <td>{{ c[3] }}</td>
+            <td>
+                <a href="/customers/edit/{{ c[0] }}" class="btn">Edit</a>
+                <a href="/customers/delete/{{ c[0] }}" class="btn" onclick="return confirm('Are you sure you want to delete this customer?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>
