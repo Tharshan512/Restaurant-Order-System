@@ -2,18 +2,32 @@
 <html>
 <head>
     <title>Restaurant Order System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Restaurant Order System</h1>
-    <p>Flask app is running.</p>
 
-    <ul>
-        <li><a href="/test-db">Test Database Connection</a></li>
-        <li><a href="/order-details">View Order Details</a></li>
-        <li><a href="/customers">Manage Customers</a></li>
-        <li><a href="/categories">Manage Categories</a></li>
-        <li><a href="/menu-items">Manage Menu Items</a></li>
-        <li><a href="/orders">Manage Orders</a></li>
-    </ul>
+    <div class="navbar">
+        <h2>Restaurant System</h2>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/customers">Customers</a>
+            <a href="/menu-items">Menu</a>
+            <a href="/orders">Orders</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Welcome to Your Management Dashboard</h1>
+
+        <div class="grid">
+            <a href="/test-db" class="card">Test Database</a>
+            <a href="/order-details" class="card">View Orders</a>
+            <a href="/customers" class="card">Manage Customers</a>
+            <a href="/categories" class="card">Categories</a>
+            <a href="/menu-items" class="card">Menu Items</a>
+            <a href="/orders" class="card">Orders</a>
+        </div>
+    </div>
+
 </body>
 </html>
