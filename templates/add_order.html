@@ -1,0 +1,33 @@
+<h1>Create Order</h1>
+
+<form method="POST">
+    Order Date:
+    <input type="date" name="order_date" required><br><br>
+
+    Status:
+    <select name="status" required>
+        <option value="Pending">Pending</option>
+        <option value="Preparing">Preparing</option>
+        <option value="Ready">Ready</option>
+        <option value="Completed">Completed</option>
+    </select><br><br>
+
+    Customer:
+    <select name="customer_id" required>
+        {% for c in customers %}
+            <option value="{{ c[0] }}">{{ c[1] }} {{ c[2] }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    Staff:
+    <select name="staff_id" required>
+        {% for s in staff %}
+            <option value="{{ s[0] }}">{{ s[1] }} {{ s[2] }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Create Order</button>
+</form>
+
+<br>
+<a href="/orders">Back</a>

@@ -1,6 +1,30 @@
 from flask import Flask, render_template, request, redirect, url_for
 from db_config import get_db_connection
 
+def update_order_total(order_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT SUM(oi.Quantity * m.Price)
+        FROM OrderItem oi
+        JOIN MenuItem m ON oi.MenuItemID = m.MenuItemID
+        WHERE oi.OrderID = %s
+    """, (order_id,))
+
+    total = cursor.fetchone()[0]
+
+    if total is None:
+        total = 0.00
+
+    cursor.execute("""
+        UPDATE Orders
+        SET TotalAmount = %s
+        WHERE OrderID = %s
+    """, (total, order_id))
+
+    conn.commit()
+    conn.close()
 app = Flask(__name__)
 
 @app.route('/')
@@ -21,25 +45,24 @@ def order_details():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    query = """
-    SELECT 
-        o.OrderID,
-        CONCAT(c.FirstName, ' ', c.LastName) AS Customer,
-        m.ItemName,
-        oi.Quantity,
-        m.Price,
-        (oi.Quantity * m.Price) AS Subtotal
-    FROM Orders o
-    JOIN Customer c ON o.CustomerID = c.CustomerID
-    JOIN OrderItem oi ON o.OrderID = oi.OrderID
-    JOIN MenuItem m ON oi.MenuItemID = m.MenuItemID
-    """
-
-    cursor.execute(query)
+    cursor.execute("""
+        SELECT 
+            o.OrderID,
+            CONCAT(c.FirstName, ' ', c.LastName) AS Customer,
+            m.ItemName,
+            oi.Quantity,
+            m.Price,
+            (oi.Quantity * m.Price) AS Subtotal
+        FROM Orders o
+        JOIN Customer c ON o.CustomerID = c.CustomerID
+        JOIN OrderItem oi ON o.OrderID = oi.OrderID
+        JOIN MenuItem m ON oi.MenuItemID = m.MenuItemID
+    """)
     orders = cursor.fetchall()
 
     conn.close()
     return render_template('order_details.html', orders=orders)
+
 
 @app.route('/customers')
 def view_customers():
@@ -263,6 +286,173 @@ def delete_menu_item(id):
     conn.close()
 
     return redirect(url_for('view_menu_items'))
+
+@app.route('/orders')
+def view_orders():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT o.OrderID, o.OrderDate, o.Status, o.TotalAmount,
+               c.FirstName, c.LastName,
+               s.FirstName, s.LastName
+        FROM Orders o
+        JOIN Customer c ON o.CustomerID = c.CustomerID
+        JOIN Staff s ON o.StaffID = s.StaffID
+    """)
+    orders = cursor.fetchall()
+
+    conn.close()
+    return render_template('orders.html', orders=orders)
+
+@app.route('/orders/add', methods=['GET', 'POST'])
+def add_order():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        order_date = request.form['order_date']
+        status = request.form['status']
+        customer_id = request.form['customer_id']
+        staff_id = request.form['staff_id']
+
+        cursor.execute("""
+            INSERT INTO Orders (OrderDate, Status, TotalAmount, CustomerID, StaffID)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (order_date, status, 0.00, customer_id, staff_id))
+
+        conn.commit()
+        conn.close()
+        return redirect(url_for('view_orders'))
+
+    cursor.execute("SELECT CustomerID, FirstName, LastName FROM Customer")
+    customers = cursor.fetchall()
+
+    cursor.execute("SELECT StaffID, FirstName, LastName FROM Staff")
+    staff = cursor.fetchall()
+
+    conn.close()
+    return render_template('add_order.html', customers=customers, staff=staff)
+
+@app.route('/orders/edit/<int:id>', methods=['GET', 'POST'])
+def edit_order(id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        status = request.form['status']
+
+        cursor.execute("""
+            UPDATE Orders
+            SET Status = %s
+            WHERE OrderID = %s
+        """, (status, id))
+
+        conn.commit()
+        conn.close()
+        return redirect(url_for('view_orders'))
+
+    cursor.execute("SELECT * FROM Orders WHERE OrderID = %s", (id,))
+    order = cursor.fetchone()
+
+    conn.close()
+    return render_template('edit_order.html', order=order)
+
+@app.route('/orders/delete/<int:id>')
+def delete_order(id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM OrderItem WHERE OrderID = %s", (id,))
+    cursor.execute("DELETE FROM Orders WHERE OrderID = %s", (id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('view_orders'))
+
+@app.route('/orders/<int:order_id>/items', methods=['GET', 'POST'])
+def manage_order_items(order_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        menu_item_id = request.form['menu_item_id']
+        quantity = request.form['quantity']
+
+        cursor.execute("""
+            INSERT INTO OrderItem (OrderID, MenuItemID, Quantity)
+            VALUES (%s, %s, %s)
+        """, (order_id, menu_item_id, quantity))
+
+        conn.commit()
+
+        update_order_total(order_id)
+
+        conn.close()
+        return redirect(url_for('manage_order_items', order_id=order_id))
+
+    cursor.execute("""
+        SELECT oi.OrderID, oi.MenuItemID, m.ItemName, m.Price, oi.Quantity
+        FROM OrderItem oi
+        JOIN MenuItem m ON oi.MenuItemID = m.MenuItemID
+        WHERE oi.OrderID = %s
+    """, (order_id,))
+    items = cursor.fetchall()
+
+    cursor.execute("SELECT MenuItemID, ItemName FROM MenuItem")
+    menu_items = cursor.fetchall()
+
+    conn.close()
+    return render_template('manage_order_items.html', order_id=order_id, items=items, menu_items=menu_items)
+
+@app.route('/orders/<int:order_id>/items/edit/<int:menu_item_id>', methods=['GET', 'POST'])
+def edit_order_item(order_id, menu_item_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        quantity = request.form['quantity']
+
+        cursor.execute("""
+            UPDATE OrderItem
+            SET Quantity = %s
+            WHERE OrderID = %s AND MenuItemID = %s
+        """, (quantity, order_id, menu_item_id))
+
+        conn.commit()
+
+        update_order_total(order_id)
+
+        conn.close()
+        return redirect(url_for('manage_order_items', order_id=order_id))
+
+    cursor.execute("""
+        SELECT OrderID, MenuItemID, Quantity
+        FROM OrderItem
+        WHERE OrderID = %s AND MenuItemID = %s
+    """, (order_id, menu_item_id))
+    order_item = cursor.fetchone()
+
+    conn.close()
+    return render_template('edit_order_item.html', order_item=order_item, order_id=order_id)
+
+@app.route('/orders/<int:order_id>/items/delete/<int:menu_item_id>')
+def delete_order_item(order_id, menu_item_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM OrderItem
+        WHERE OrderID = %s AND MenuItemID = %s
+    """, (order_id, menu_item_id))
+
+    conn.commit()
+
+    update_order_total(order_id)
+
+    conn.close()
+    return redirect(url_for('manage_order_items', order_id=order_id))
 
 if __name__ == '__main__':
     app.run(debug=True)

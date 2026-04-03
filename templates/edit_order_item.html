@@ -1,0 +1,11 @@
+<h1>Update Quantity</h1>
+
+<form method="POST">
+    Quantity:
+    <input type="number" name="quantity" value="{{ order_item[2] }}" min="1" required><br><br>
+
+    <button type="submit">Update</button>
+</form>
+
+<br>
+<a href="/orders/{{ order_id }}/items">Back</a>
