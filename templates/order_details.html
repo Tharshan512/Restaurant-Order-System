@@ -2,11 +2,26 @@
 <html>
 <head>
     <title>Order Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Order Details</h1>
 
-    <table border="1" cellpadding="8">
+<div class="navbar">
+    <h2>Restaurant Order System</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/customers">Customers</a>
+        <a href="/categories">Categories</a>
+        <a href="/menu-items">Menu Items</a>
+        <a href="/orders">Orders</a>
+        <a href="/order-details">Order Details</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Order Summary</h1>
+
+    <table>
         <tr>
             <th>Order ID</th>
             <th>Customer</th>
@@ -25,9 +40,7 @@
         </tr>
         {% endfor %}
     </table>
+</div>
 
-    <br>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <a href="/">Back to Home</a>
 </body>
 </html>

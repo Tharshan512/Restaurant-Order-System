@@ -1,34 +1,58 @@
-<h1>Create Order</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Order</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
 
-<form method="POST">
-    Order Date:
-    <input type="date" name="order_date" required><br><br>
+<div class="navbar">
+    <h2>Restaurant System</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/customers">Customers</a>
+        <a href="/categories">Categories</a>
+        <a href="/menu-items">Menu</a>
+        <a href="/orders">Orders</a>
+        <a href="/order-details">Order Details</a>
+    </div>
+</div>
 
-    Status:
-    <select name="status" required>
-        <option value="Pending">Pending</option>
-        <option value="Preparing">Preparing</option>
-        <option value="Ready">Ready</option>
-        <option value="Completed">Completed</option>
-    </select><br><br>
+<div class="container">
+    <h1>Create Order</h1>
 
-    Customer:
-    <select name="customer_id" required>
-        {% for c in customers %}
-            <option value="{{ c[0] }}">{{ c[1] }} {{ c[2] }}</option>
-        {% endfor %}
-    </select><br><br>
+    <form method="POST">
+        <label for="order_date">Order Date</label>
+        <input type="date" id="order_date" name="order_date" required>
 
-    Staff:
-    <select name="staff_id" required>
-        {% for s in staff %}
-            <option value="{{ s[0] }}">{{ s[1] }} {{ s[2] }}</option>
-        {% endfor %}
-    </select><br><br>
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="Pending">Pending</option>
+            <option value="Preparing">Preparing</option>
+            <option value="Ready">Ready</option>
+            <option value="Completed">Completed</option>
+        </select>
 
-    <button type="submit">Create Order</button>
-</form>
+        <label for="customer_id">Customer</label>
+        <select id="customer_id" name="customer_id" required>
+            {% for c in customers %}
+                <option value="{{ c[0] }}">{{ c[1] }} {{ c[2] }}</option>
+            {% endfor %}
+        </select>
 
-<br>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<a href="/orders">Back</a>
+        <label for="staff_id">Staff</label>
+        <select id="staff_id" name="staff_id" required>
+            {% for s in staff %}
+                <option value="{{ s[0] }}">{{ s[1] }} {{ s[2] }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Create Order</button>
+    </form>
+
+    <br>
+    <a href="/orders" class="btn">Back to Orders</a>
+</div>
+
+</body>
+</html>

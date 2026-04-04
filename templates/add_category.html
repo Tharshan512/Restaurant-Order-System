@@ -1,11 +1,36 @@
-<h1>Add Category</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Category</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
 
-<form method="POST">
-    Category Name: <input type="text" name="category_name" required><br><br>
+<div class="navbar">
+    <h2>Restaurant System</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/customers">Customers</a>
+        <a href="/categories">Categories</a>
+        <a href="/menu-items">Menu</a>
+        <a href="/orders">Orders</a>
+        <a href="/order-details">Order Details</a>
+    </div>
+</div>
 
-    <button type="submit">Add Category</button>
-</form>
+<div class="container">
+    <h1>Add Category</h1>
 
-<br>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<a href="/categories">Back</a>
+    <form method="POST">
+        <label for="category_name">Category Name</label>
+        <input type="text" id="category_name" name="category_name" required>
+
+        <button type="submit">Add Category</button>
+    </form>
+
+    <br>
+    <a href="/categories" class="btn">Back to Categories</a>
+</div>
+
+</body>
+</html>

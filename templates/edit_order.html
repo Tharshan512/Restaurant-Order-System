@@ -1,17 +1,41 @@
-<h1>Edit Order Status</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Order Status</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
 
-<form method="POST">
-    Status:
-    <select name="status" required>
-        <option value="Pending" {% if order[2] == 'Pending' %}selected{% endif %}>Pending</option>
-        <option value="Preparing" {% if order[2] == 'Preparing' %}selected{% endif %}>Preparing</option>
-        <option value="Ready" {% if order[2] == 'Ready' %}selected{% endif %}>Ready</option>
-        <option value="Completed" {% if order[2] == 'Completed' %}selected{% endif %}>Completed</option>
-    </select><br><br>
+<div class="navbar">
+    <h2>Restaurant System</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/customers">Customers</a>
+        <a href="/categories">Categories</a>
+        <a href="/menu-items">Menu</a>
+        <a href="/orders">Orders</a>
+        <a href="/order-details">Order Details</a>
+    </div>
+</div>
 
-    <button type="submit">Update Status</button>
-</form>
+<div class="container">
+    <h1>Edit Order Status</h1>
 
-<br>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<a href="/orders">Back</a>
+    <form method="POST">
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="Pending" {% if order[2] == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="Preparing" {% if order[2] == 'Preparing' %}selected{% endif %}>Preparing</option>
+            <option value="Ready" {% if order[2] == 'Ready' %}selected{% endif %}>Ready</option>
+            <option value="Completed" {% if order[2] == 'Completed' %}selected{% endif %}>Completed</option>
+        </select>
+
+        <button type="submit">Update Status</button>
+    </form>
+
+    <br>
+    <a href="/orders" class="btn">Back to Orders</a>
+</div>
+
+</body>
+</html>

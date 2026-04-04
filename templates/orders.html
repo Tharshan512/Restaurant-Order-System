@@ -1,36 +1,56 @@
-<h1>Orders</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 
-<a href="/orders/add">Create Order</a>
-<br><br>
+<div class="navbar">
+    <h2>Restaurant Order System</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/customers">Customers</a>
+        <a href="/categories">Categories</a>
+        <a href="/menu-items">Menu Items</a>
+        <a href="/orders">Orders</a>
+        <a href="/order-details">Order Details</a>
+    </div>
+</div>
 
-<table border="1">
-<tr>
-    <th>Order ID</th>
-    <th>Order Date</th>
-    <th>Status</th>
-    <th>Total Amount</th>
-    <th>Customer</th>
-    <th>Staff</th>
-    <th>Actions</th>
-</tr>
+<div class="container">
+    <h1>Orders</h1>
 
-{% for o in orders %}
-<tr>
-    <td>{{ o[0] }}</td>
-    <td>{{ o[1] }}</td>
-    <td>{{ o[2] }}</td>
-    <td>{{ o[3] }}</td>
-    <td>{{ o[4] }} {{ o[5] }}</td>
-    <td>{{ o[6] }} {{ o[7] }}</td>
-    <td>
-        <a href="/orders/edit/{{ o[0] }}">Edit Status</a> |
-        <a href="/orders/delete/{{ o[0] }}">Delete</a> |
-        <a href="/orders/{{ o[0] }}/items">Manage Items</a>
-    </td>
-</tr>
-{% endfor %}
-</table>
+    <a href="/orders/add" class="btn">Create Order</a>
 
-<br>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<a href="/">Back Home</a>
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total Amount</th>
+            <th>Customer</th>
+            <th>Staff</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for o in orders %}
+        <tr>
+            <td>{{ o[0] }}</td>
+            <td>{{ o[1] }}</td>
+            <td>{{ o[2] }}</td>
+            <td>{{ o[3] }}</td>
+            <td>{{ o[4] }} {{ o[5] }}</td>
+            <td>{{ o[6] }} {{ o[7] }}</td>
+            <td>
+                <a href="/orders/edit/{{ o[0] }}" class="btn">Edit</a>
+                <a href="/orders/delete/{{ o[0] }}" class="btn">Delete</a>
+                <a href="/orders/{{ o[0] }}/items" class="btn">Manage Items</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

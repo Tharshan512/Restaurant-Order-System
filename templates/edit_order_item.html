@@ -1,12 +1,36 @@
-<h1>Update Quantity</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Order Item Quantity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
 
-<form method="POST">
-    Quantity:
-    <input type="number" name="quantity" value="{{ order_item[2] }}" min="1" required><br><br>
+<div class="navbar">
+    <h2>Restaurant System</h2>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/customers">Customers</a>
+        <a href="/categories">Categories</a>
+        <a href="/menu-items">Menu</a>
+        <a href="/orders">Orders</a>
+        <a href="/order-details">Order Details</a>
+    </div>
+</div>
 
-    <button type="submit">Update</button>
-</form>
+<div class="container">
+    <h1>Update Quantity</h1>
 
-<br>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<a href="/orders/{{ order_id }}/items">Back</a>
+    <form method="POST">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" value="{{ order_item[2] }}" min="1" required>
+
+        <button type="submit">Update Quantity</button>
+    </form>
+
+    <br>
+    <a href="/orders/{{ order_id }}/items" class="btn">Back to Order Items</a>
+</div>
+
+</body>
+</html>
