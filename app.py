@@ -455,4 +455,4 @@ def delete_order_item(order_id, menu_item_id):
     return redirect(url_for('manage_order_items', order_id=order_id))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
